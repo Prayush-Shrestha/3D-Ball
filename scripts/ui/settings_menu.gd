@@ -10,16 +10,16 @@ extends PanelContainer
 
 
 func _ready() -> void:
+	if touch_option.item_count == 0:
+		touch_option.add_item("Auto", 0)
+		touch_option.add_item("Always show", 1)
+		touch_option.add_item("Hide", 2)
 	_load_values()
 	master_slider.value_changed.connect(_on_volumes_changed.bind())
 	music_slider.value_changed.connect(_on_volumes_changed.bind())
 	sfx_slider.value_changed.connect(_on_volumes_changed.bind())
 	sens_slider.value_changed.connect(_on_sens_changed)
 	touch_option.item_selected.connect(_on_touch_changed)
-	if touch_option.item_count == 0:
-		touch_option.add_item("Auto", 0)
-		touch_option.add_item("Always show", 1)
-		touch_option.add_item("Hide", 2)
 	var close_btn: Button = get_node_or_null("VBox/CloseButton")
 	if close_btn != null and not close_btn.pressed.is_connected(_on_close):
 		close_btn.pressed.connect(_on_close)

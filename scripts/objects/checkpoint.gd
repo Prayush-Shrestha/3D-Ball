@@ -11,6 +11,7 @@ var is_active := false
 @onready var flag_inactive: MeshInstance3D = $FlagInactive
 @onready var flag_active: MeshInstance3D = $FlagActive
 @onready var ring: MeshInstance3D = $Base
+@onready var burst: CPUParticles3D = $ActivateBurst
 
 
 func _ready() -> void:
@@ -29,6 +30,12 @@ func _on_body_entered(body: Node3D) -> void:
 func activate(silent := false) -> void:
 	is_active = true
 	_set_visual(true)
+	if burst != null:
+		burst.restart()
+	if flag_active != null:
+		flag_active.scale = Vector3.ONE * 0.4
+		var tw := create_tween()
+		tw.tween_property(flag_active, "scale", Vector3.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	activated.emit(self)
 	get_tree().call_group("level", "on_checkpoint", self)
 	if not silent and has_node("/root/AudioManager"):

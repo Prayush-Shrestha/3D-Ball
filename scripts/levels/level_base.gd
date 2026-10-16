@@ -95,7 +95,7 @@ func on_checkpoint(cp: Node) -> void:
 func on_hazard() -> void:
 	if is_complete or _paused:
 		return
-	_respawn("Ouch! Back to checkpoint.")
+	_respawn("Ouch! Back to checkpoint.", true)
 
 
 func on_finish() -> void:
@@ -106,13 +106,18 @@ func on_finish() -> void:
 
 # --- Respawn / restart ---
 
-func _respawn(reason: String) -> void:
+func _respawn(reason: String, hard := false) -> void:
 	if player == null or is_complete:
 		return
 	if player.has_method("respawn_at"):
 		player.respawn_at(spawn_position + Vector3(0, 0.5, 0))
 	if has_node("/root/AudioManager"):
 		get_node("/root/AudioManager").play_sfx("respawn")
+	if hud != null and hud.has_method("flash_screen"):
+		if hard:
+			hud.call("flash_screen", Color(1.0, 0.3, 0.25))
+		else:
+			hud.call("flash_screen", Color(0.7, 0.9, 1.0))
 	if hud != null and hud.has_method("flash_message") and not reason.is_empty():
 		hud.call("flash_message", reason)
 
@@ -120,7 +125,7 @@ func _respawn(reason: String) -> void:
 func restart_from_checkpoint() -> void:
 	get_tree().paused = false
 	_paused = false
-	_respawn("")
+	_respawn("", true)
 
 
 func restart_level() -> void:
@@ -169,6 +174,8 @@ func complete_level() -> void:
 		new_best = get_node("/root/SaveManager").complete_level(level_index, gems_collected, elapsed)
 	if has_node("/root/AudioManager"):
 		get_node("/root/AudioManager").play_sfx("win")
+	if hud != null and hud.has_method("flash_screen"):
+		hud.call("flash_screen", Color(1.0, 0.85, 0.3))
 	var best := -1.0
 	if has_node("/root/SaveManager"):
 		best = get_node("/root/SaveManager").get_best_time(level_index)

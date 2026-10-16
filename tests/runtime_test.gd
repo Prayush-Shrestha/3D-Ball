@@ -66,6 +66,8 @@ func _process(_delta: float) -> bool:
 		4:
 			if _frames_in_stage(f, 40):
 				_check("gem collected exactly once (got %d)" % level.gems_collected, level.gems_collected == 1)
+				var gem_text: String = level.hud.get_node("TopBar/GemLabel").text
+				_check("HUD counter updated (%s)" % gem_text, gem_text.contains("1"))
 				_next()
 				_teleport(Vector3(2.5, 3.5, -30))  # Checkpoint1
 		5:

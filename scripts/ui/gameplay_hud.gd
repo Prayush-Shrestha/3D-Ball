@@ -14,8 +14,10 @@ var level: Node = null
 @onready var jump_button: Button = $TouchControls/JumpButton
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var complete_overlay: Control = $CompleteOverlay
+@onready var flash_rect: ColorRect = $FlashRect
 
 var _msg_tween: Tween = null
+var _flash_tween: Tween = null
 
 
 func _ready() -> void:
@@ -30,6 +32,7 @@ func _ready() -> void:
 	if complete_overlay != null:
 		complete_overlay.visible = false
 		_wire_complete_buttons()
+	UISound.hookup(self, [jump_button])
 	_update_touch_visibility()
 
 
@@ -61,6 +64,18 @@ func flash_message(text: String) -> void:
 	_msg_tween = create_tween()
 	_msg_tween.tween_interval(1.2)
 	_msg_tween.tween_property(message_label, "modulate:a", 0.0, 0.6)
+
+
+func flash_screen(c: Color) -> void:
+	# Full-screen color blink for respawns, hazards, and victories.
+	if flash_rect == null:
+		return
+	flash_rect.color = c
+	flash_rect.modulate.a = 0.32
+	if _flash_tween != null and _flash_tween.is_valid():
+		_flash_tween.kill()
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(flash_rect, "modulate:a", 0.0, 0.45)
 
 
 func set_pause_visible(v: bool) -> void:
@@ -101,7 +116,7 @@ func _update_touch_visibility() -> void:
 		return
 	var show := DisplayServer.is_touchscreen_available() or OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")
 	if has_node("/root/SaveManager"):
-		var pref := get_node("/root/SaveManager").show_touch_controls
+		var pref: int = get_node("/root/SaveManager").show_touch_controls
 		if pref == 1:
 			show = true
 		elif pref == 2:

@@ -8,6 +8,10 @@ var _streams: Dictionary = {}
 const POOL_SIZE := 8
 const SAMPLE_RATE := 22050
 
+var _roll_player: AudioStreamPlayer = null
+var _roll_level := 0.0
+var _roll_target := 0.0
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -23,6 +27,12 @@ func _ready() -> void:
 	_streams["win"] = _make_win_jingle()
 	_streams["click"] = _make_tone(660.0, 660.0, 0.07, 0.35)
 	_streams["respawn"] = _make_tone(200.0, 500.0, 0.25, 0.45)
+	_roll_player = AudioStreamPlayer.new()
+	_roll_player.bus = "Master"
+	_roll_player.stream = _make_roll_loop()
+	_roll_player.volume_db = -60.0
+	add_child(_roll_player)
+	_roll_player.play()
 	apply_volumes()
 
 
@@ -46,6 +56,50 @@ func play_sfx(sfx_name: String) -> void:
 	# All busy: steal the first one.
 	_players[0].stream = _streams[sfx_name]
 	_players[0].play()
+
+
+func set_rolling(intensity: float) -> void:
+	# Called every physics frame by the ball (0 = still/air, 1 = full speed).
+	_roll_target = clampf(intensity, 0.0, 1.0)
+
+
+func _process(delta: float) -> void:
+	if _roll_player == null:
+		return
+	var t := _roll_target
+	if get_tree().paused:
+		t = 0.0
+	_roll_level = lerpf(_roll_level, t, minf(1.0, delta * 8.0))
+	if _roll_level < 0.02:
+		_roll_player.volume_db = -60.0
+	else:
+		_roll_player.volume_db = lerpf(-34.0, -16.0, _roll_level)
+	_roll_player.pitch_scale = lerpf(0.7, 1.25, _roll_level)
+
+
+func _make_roll_loop() -> AudioStreamWAV:
+	# Soft looped rumble: smoothed random walk, ends crossfaded for clean loop.
+	var frames := SAMPLE_RATE  # 1 second
+	var data := PackedByteArray()
+	data.resize(frames)
+	var v := 0.0
+	for i in frames:
+		v += (randf() * 2.0 - 1.0) * 0.25
+		v *= 0.985
+		data[i] = int(clampf(v * 0.5 + 0.5, 0.0, 1.0) * 255.0)
+	var fade := 4000
+	for i in fade:
+		var a := float(i) / float(fade)
+		var tail_idx := frames - fade + i
+		data[tail_idx] = int(lerpf(float(data[tail_idx]), float(data[i]), a))
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_8_BITS
+	stream.mix_rate = SAMPLE_RATE
+	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	stream.loop_begin = 0
+	stream.loop_end = frames
+	stream.data = data
+	return stream
 
 
 func _make_tone(freq_from: float, freq_to: float, duration: float, volume: float) -> AudioStreamWAV:

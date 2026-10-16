@@ -17,6 +17,7 @@ func _ready() -> void:
 		restart_button.pressed.connect(_on_restart)
 	if menu_button != null:
 		menu_button.pressed.connect(_on_menu)
+	UISound.hookup(self)
 
 
 func _level():

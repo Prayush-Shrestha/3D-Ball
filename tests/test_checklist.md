@@ -14,10 +14,11 @@ $godot = "<path-to>\Godot_v4.7.2-stable_win64_console.exe"
 - [x] `--headless --import`: clean, no script errors (one type-inference error
       found and fixed during development).
 - [x] `validate_scenes.gd`: 3 autoloads + 18 scenes instantiate cleanly.
-- [x] `runtime_test.gd`: 11/11 PASS —
+- [x] `runtime_test.gd`: 12/12 PASS —
   moved forward 8.06 m in 1 s, no fall-through, jump +1.78 m, gem counted once,
-  checkpoint moved spawn (dist 0.00), fall respawned (y 3.0), pause froze tree,
-  resume unfroze, level completed, save recorded completion, save file exists.
+  HUD counter shows it, checkpoint moved spawn (dist 0.00), fall respawned
+  (y 3.0), pause froze tree, resume unfroze, level completed, save recorded
+  completion, save file exists.
 - [x] Windows export: `RollingRealms.exe` (109 MB) + `.pck` built, exit 0.
 - [x] Exported exe: still running after 10 s with no crash (main menu scene live).
 - [x] Android export: `RollingRealms-debug.apk` (28.5 MB) signed debug, exit 0

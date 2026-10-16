@@ -11,6 +11,7 @@ const AUTOLOADS := [
 
 const SCENES := [
 	"res://scenes/menus/main_menu.tscn",
+	"res://scenes/menus/menu_backdrop.tscn",
 	"res://scenes/menus/level_select.tscn",
 	"res://scenes/menus/settings_menu.tscn",
 	"res://scenes/player/ball_player.tscn",
@@ -76,6 +77,14 @@ func _check(inst: Node, path: String) -> void:
 		if player == null or hud == null or spawn == null:
 			print("FAIL wiring in ", path, ": missing BallPlayer/HUD/SpawnPoint")
 			failures += 1
+		elif not player.has_method("respawn_at"):
+			# A script with a parse error loads as null: the scene still
+			# instantiates but the behavior is missing. Catch that here.
+			print("FAIL script in ", path, ": BallPlayer logic missing (parse error?)")
+			failures += 1
+		elif not hud.has_method("bind_level") or not hud.has_method("flash_screen"):
+			print("FAIL script in ", path, ": HUD logic missing (parse error?)")
+			failures += 1
 		else:
 			print("OK ", path)
 	elif path.contains("main_menu"):
@@ -84,6 +93,36 @@ func _check(inst: Node, path: String) -> void:
 				print("FAIL wiring in ", path, ": missing ", n)
 				failures += 1
 				return
-		print("OK ", path)
+		if inst.get_script() == null:
+			print("FAIL script in ", path, ": main menu logic missing (parse error?)")
+			failures += 1
+		else:
+			print("OK ", path)
+	elif path.ends_with("mobile_controls.tscn"):
+		# Root is a plain container by design; logic lives on the Joystick.
+		var stick: Node = inst.get_node_or_null("Joystick")
+		if stick == null or stick.get_script() == null:
+			print("FAIL script in ", path, ": joystick logic missing (parse error?)")
+			failures += 1
+		else:
+			print("OK ", path)
+	elif path.ends_with("gameplay_hud.tscn") or path.ends_with("pause_menu.tscn") or path.ends_with("level_complete.tscn") or path.ends_with("level_select.tscn") or path.ends_with("settings_menu.tscn"):
+		if inst.get_script() == null:
+			print("FAIL script in ", path, ": UI logic missing (parse error?)")
+			failures += 1
+		else:
+			print("OK ", path)
+	elif path.ends_with("ball_player.tscn"):
+		if not inst.has_method("respawn_at"):
+			print("FAIL script in ", path, ": ball logic missing (parse error?)")
+			failures += 1
+		else:
+			print("OK ", path)
+	elif path.contains("/objects/"):
+		if inst.get_script() == null and not path.ends_with("static_platform.tscn"):
+			print("FAIL script in ", path, ": object logic missing (parse error?)")
+			failures += 1
+		else:
+			print("OK ", path)
 	else:
 		print("OK ", path)

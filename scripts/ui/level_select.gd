@@ -8,6 +8,7 @@ extends Control
 func _ready() -> void:
 	back_button.pressed.connect(_on_back)
 	refresh()
+	UISound.hookup(self)
 
 
 func refresh() -> void:

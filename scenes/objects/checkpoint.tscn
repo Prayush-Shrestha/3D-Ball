@@ -66,3 +66,19 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 2.6, 0)
 mesh = SubResource("Mesh_flag")
 surface_material_override/0 = SubResource("Mat_flag_on")
+
+[node name="ActivateBurst" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+emitting = false
+amount = 24
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.9
+direction = Vector3(0, 1, 0)
+spread = 65.0
+initial_velocity_min = 3.0
+initial_velocity_max = 6.0
+gravity = Vector3(0, -7, 0)
+color = Color(0.4, 1, 0.6, 1)
+scale_amount_min = 0.08
+scale_amount_max = 0.2

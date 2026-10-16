@@ -24,6 +24,7 @@ func _ready() -> void:
 	_show_only(null)
 	_refresh()
 	_build_level_buttons()
+	UISound.hookup(self)
 
 
 func _refresh() -> void:

@@ -28,6 +28,9 @@ platforms, grab golden gems, hit checkpoints, and reach the finish pad in 3 leve
   total gems, best times, audio + camera prefs. Survives restarts.
 - Touch controls: virtual joystick (bottom-left), JUMP button (bottom-right),
   pause button (top bar). Auto-shown on touch devices, overridable in Settings.
+- Game feel: speed-reactive rolling sound, ball motion trail, landing dust with
+  squash-and-stretch, checkpoint bursts, finish fireworks, screen flash on
+  respawn/victory, click sounds on every button, live 3D diorama behind the menu.
 - Windows `.exe` and Android debug `.apk` built and tested from this project.
 
 ## Screenshots
@@ -86,8 +89,8 @@ $godot = "<path-to>\Godot_v4.7.2-stable_win64_console.exe"
 
 `runtime_test.gd` plays Level 1 with synthetic input through the real physics
 engine and asserts: forward movement, no fall-through, jump height, single gem
-count, checkpoint spawn update, fall respawn, pause/resume, level completion,
-and save-file persistence. Last run: **11/11 PASS**.
+count, live HUD counter, checkpoint spawn update, fall respawn, pause/resume,
+level completion, and save-file persistence. Last run: **12/12 PASS**.
 
 ## Android build (tested 2026-10-16)
 

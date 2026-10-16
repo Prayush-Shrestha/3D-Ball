@@ -16,6 +16,7 @@ func _ready() -> void:
 		next_button.pressed.connect(_on_next)
 	if menu_button != null:
 		menu_button.pressed.connect(_on_menu)
+	UISound.hookup(self)
 
 
 func setup(gems: int, total: int, time_sec: float, best: float, new_best: bool) -> void:

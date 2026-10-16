@@ -49,3 +49,35 @@ surface_material_override/0 = SubResource("Mat_pad")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
 mesh = SubResource("Mesh_beam")
 surface_material_override/0 = SubResource("Mat_beam")
+
+[node name="FountainA" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+emitting = false
+amount = 40
+lifetime = 1.2
+one_shot = true
+explosiveness = 0.85
+direction = Vector3(0, 1, 0)
+spread = 55.0
+initial_velocity_min = 5.0
+initial_velocity_max = 9.0
+gravity = Vector3(0, -9, 0)
+color = Color(1, 0.8, 0.25, 1)
+scale_amount_min = 0.1
+scale_amount_max = 0.25
+
+[node name="FountainB" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+emitting = false
+amount = 30
+lifetime = 1.4
+one_shot = true
+explosiveness = 0.85
+direction = Vector3(0, 1, 0)
+spread = 70.0
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -8, 0)
+color = Color(0.3, 0.95, 0.9, 1)
+scale_amount_min = 0.1
+scale_amount_max = 0.22

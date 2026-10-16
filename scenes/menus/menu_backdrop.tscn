@@ -1,0 +1,103 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/menu_backdrop.gd" id="1_bd"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.25, 0.55, 0.95, 1)
+sky_horizon_color = Color(0.7, 0.87, 0.98, 1)
+ground_bottom_color = Color(0.3, 0.5, 0.8, 1)
+ground_horizon_color = Color(0.75, 0.88, 0.97, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_energy = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh_island"]
+size = Vector3(10, 1.5, 10)
+
+[sub_resource type="StandardMaterial3D" id="Mat_island"]
+albedo_color = Color(0.3, 0.75, 0.78, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="Mesh_under"]
+top_radius = 5.0
+bottom_radius = 0.0
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_under"]
+albedo_color = Color(0.45, 0.5, 0.6, 1)
+roughness = 0.9
+
+[sub_resource type="PrismMesh" id="Mesh_gem"]
+size = Vector3(0.7, 1.1, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="Mat_gem"]
+albedo_color = Color(1, 0.75, 0.15, 1)
+emission_enabled = true
+emission = Color(1, 0.65, 0.1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="SphereMesh" id="Mesh_ball"]
+radius = 0.5
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_ball"]
+albedo_color = Color(0.95, 0.25, 0.35, 1)
+metallic = 0.65
+roughness = 0.25
+
+[node name="MenuBackdrop" type="Node3D"]
+script = ExtResource("1_bd")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.9, 0.5, 0)
+light_energy = 1.1
+
+[node name="Island" type="MeshInstance3D" parent="."]
+position = Vector3(0, -1, 0)
+mesh = SubResource("Mesh_island")
+surface_material_override/0 = SubResource("Mat_island")
+
+[node name="Under" type="MeshInstance3D" parent="."]
+position = Vector3(0, -3.7, 0)
+mesh = SubResource("Mesh_under")
+surface_material_override/0 = SubResource("Mat_under")
+
+[node name="Gems" type="Node3D" parent="."]
+
+[node name="GemA" type="MeshInstance3D" parent="Gems"]
+position = Vector3(-3, 1.2, -1)
+mesh = SubResource("Mesh_gem")
+surface_material_override/0 = SubResource("Mat_gem")
+
+[node name="GemB" type="MeshInstance3D" parent="Gems"]
+position = Vector3(0, 2, 1.5)
+mesh = SubResource("Mesh_gem")
+surface_material_override/0 = SubResource("Mat_gem")
+
+[node name="GemC" type="MeshInstance3D" parent="Gems"]
+position = Vector3(3, 1.2, -1)
+mesh = SubResource("Mesh_gem")
+surface_material_override/0 = SubResource("Mat_gem")
+
+[node name="DemoBall" type="Node3D" parent="."]
+position = Vector3(5.5, 1.6, 0)
+
+[node name="BallMesh" type="MeshInstance3D" parent="DemoBall"]
+mesh = SubResource("Mesh_ball")
+surface_material_override/0 = SubResource("Mat_ball")
+
+[node name="CamRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CamRig"]
+current = true
+transform = Transform3D(1, 0, 0, 0, 0.93, 0.37, 0, -0.37, 0.93, 0, 4.5, 11)
+fov = 55.0
