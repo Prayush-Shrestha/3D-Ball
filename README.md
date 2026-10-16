@@ -175,6 +175,14 @@ with `load("res://assets/audio/jump.wav")` etc. Keep the same dictionary keys:
 - **Buttons do nothing**: check the node paths in `scripts/ui/*.gd` match the
   `.tscn` names — `tests/validate_scenes.gd` catches this headlessly.
 - **Touch controls never show on desktop**: Settings → Touch UI → "Always show".
+- **App icon missing on the phone / game won't start, although `adb install`
+  says Success**: check the phone is NOT in **Safe mode** (text in a corner of
+  the screen). Safe mode hides all downloaded apps. Restart the phone normally
+  to leave it. On Xiaomi phones this was the entire problem once.
+- **Remote `adb shell am start` fails for third-party apps but works for
+  system apps**: that is a phone restriction, not a broken APK. Verify with a
+  known app (e.g. inDriver/Chrome): if it fails the same way, tap the icon on
+  the phone screen instead.
 - **Android export fails**: re-check the SDK and JDK paths in Editor Settings;
   run with `--verbose` to see which tool is missing.
 - **Web audio delayed**: browsers require a user gesture before audio starts;
