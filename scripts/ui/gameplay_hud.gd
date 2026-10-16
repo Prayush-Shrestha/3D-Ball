@@ -8,6 +8,7 @@ var level: Node = null
 @onready var gem_label: Label = $TopBar/GemLabel
 @onready var time_label: Label = $TopBar/TimeLabel
 @onready var pause_button: Button = $TopBar/PauseButton
+@onready var top_bar: HBoxContainer = $TopBar
 @onready var message_label: Label = $MessageLabel
 @onready var touch_layer: Control = $TouchControls
 @onready var joystick = $TouchControls/Joystick
@@ -18,6 +19,12 @@ var level: Node = null
 
 var _msg_tween: Tween = null
 var _flash_tween: Tween = null
+var _last_sec := -1
+var _base_joy_top := 0.0
+var _base_joy_bottom := 0.0
+var _base_jump_top := 0.0
+var _base_jump_bottom := 0.0
+var _safe_init := false
 
 
 func _ready() -> void:
@@ -25,7 +32,10 @@ func _ready() -> void:
 	if pause_button != null:
 		pause_button.pressed.connect(_on_pause_pressed)
 	if jump_button != null:
-		jump_button.pressed.connect(_on_jump_pressed)
+		# button_down = instant jump on touch. Old code used `pressed`
+		# (fires on release) so jumps felt laggy on phones.
+		if not jump_button.button_down.is_connected(_on_jump_pressed):
+			jump_button.button_down.connect(_on_jump_pressed)
 	if pause_overlay != null:
 		pause_overlay.visible = false
 		_wire_pause_buttons()
@@ -34,6 +44,17 @@ func _ready() -> void:
 		_wire_complete_buttons()
 	UISound.hookup(self, [jump_button])
 	_update_touch_visibility()
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_on_viewport_resized)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		_update_touch_visibility()
+
+
+func _on_viewport_resized() -> void:
+	_apply_safe_area()
 
 
 func bind_level(lv: Node) -> void:
@@ -48,10 +69,17 @@ func set_level_info(lv_name: String, gems: int, total: int) -> void:
 
 
 func set_time(sec: float) -> void:
-	if time_label != null:
-		var m := int(sec) / 60
-		var s := int(sec) % 60
-		time_label.text = "%02d:%02d" % [m, s]
+	if time_label == null:
+		return
+	# Called every frame by the level: only rebuild the string when the
+	# displayed second changes (saves GC churn / lag on low-end phones).
+	var s := int(sec)
+	if s == _last_sec:
+		return
+	_last_sec = s
+	var m := s / 60
+	var r := s % 60
+	time_label.text = "%02d:%02d" % [m, r]
 
 
 func flash_message(text: String) -> void:
@@ -111,10 +139,16 @@ func _fmt(sec: float) -> String:
 	return "%02d:%02d.%02d" % [m, s, c]
 
 
+func update_touch_visibility() -> void:
+	_update_touch_visibility()
+
+
 func _update_touch_visibility() -> void:
 	if touch_layer == null:
 		return
-	var show := DisplayServer.is_touchscreen_available() or OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")
+	var show := DisplayServer.is_touchscreen_available() or OS.has_feature("mobile") or OS.has_feature("android") or OS.has_feature("ios") or OS.has_feature("web_android") or OS.has_feature("web_ios")
+	if OS.get_name() == "Android" or OS.get_name() == "iOS":
+		show = true
 	if has_node("/root/SaveManager"):
 		var pref: int = get_node("/root/SaveManager").show_touch_controls
 		if pref == 1:
@@ -122,6 +156,42 @@ func _update_touch_visibility() -> void:
 		elif pref == 2:
 			show = false
 	touch_layer.visible = show
+
+
+func _apply_safe_area() -> void:
+	# Keep controls clear of notches / gesture bars on edge-to-edge phones.
+	# Base tscn margins already leave room; this adds the OS-reported inset.
+	if touch_layer == null:
+		return
+	var top_px := 0.0
+	var bottom_px := 0.0
+	if OS.get_name() == "Android" or OS.get_name() == "iOS" or OS.has_feature("mobile"):
+		var safe := DisplayServer.get_display_safe_area()
+		var win := DisplayServer.window_get_size()
+		if win.y > 0 and safe.size.y > 0:
+			top_px = float(maxi(0, safe.position.y))
+			bottom_px = float(maxi(0, win.y - (safe.position.y + safe.size.y)))
+	var canvas_h := get_viewport().get_visible_rect().size.y
+	var win_h := float(maxi(1, DisplayServer.window_get_size().y))
+	var scale := canvas_h / win_h
+	# Clamp: never shift more than ~40 canvas px, never negative.
+	var extra_top := clampf(top_px * scale, 0.0, 40.0)
+	var extra_bottom := clampf(bottom_px * scale, 0.0, 40.0)
+	if top_bar != null:
+		top_bar.offset_top = extra_top + 4.0
+		top_bar.offset_left = 12.0
+		top_bar.offset_right = -12.0
+	if is_instance_valid(joystick) and jump_button != null:
+		if not _safe_init:
+			_base_joy_top = joystick.offset_top
+			_base_joy_bottom = joystick.offset_bottom
+			_base_jump_top = jump_button.offset_top
+			_base_jump_bottom = jump_button.offset_bottom
+			_safe_init = true
+		joystick.offset_top = _base_joy_top - extra_bottom
+		joystick.offset_bottom = _base_joy_bottom - extra_bottom
+		jump_button.offset_top = _base_jump_top - extra_bottom
+		jump_button.offset_bottom = _base_jump_bottom - extra_bottom
 
 
 func _on_pause_pressed() -> void:

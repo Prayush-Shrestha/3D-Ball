@@ -10,7 +10,8 @@ extends Node3D
 
 var yaw := 0.0
 var pitch := -0.38
-var _dragging := false
+var _rmb_dragging := false
+var _cam_touch := -1
 var _last_touch := Vector2.ZERO
 
 @onready var arm: SpringArm3D = $SpringArm3D
@@ -27,21 +28,31 @@ func _unhandled_input(event: InputEvent) -> void:
 		yaw -= event.relative.x * sens
 		pitch = clampf(pitch - event.relative.y * sens, min_pitch, max_pitch)
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		_dragging = event.pressed
-	elif event is InputEventMouseMotion and _dragging:
+		_rmb_dragging = event.pressed
+	elif event is InputEventMouseMotion and _rmb_dragging:
 		var sens2 := 0.004 * _sensitivity()
 		yaw -= event.relative.x * sens2
 		pitch = clampf(pitch - event.relative.y * sens2, min_pitch, max_pitch)
 	elif event is InputEventScreenTouch:
-		_dragging = event.pressed
-		_last_touch = event.position
-	elif event is InputEventScreenDrag and _dragging:
-		# Only orbit with drags starting on the right half (joystick is left).
-		if _last_touch.x > get_viewport().get_visible_rect().size.x * 0.4:
+		# Multi-touch safe: only the first finger that starts on the right
+		# side becomes the camera finger. Left-side joystick touches are
+		# ignored so the two thumbs never fight. Old code used a single
+		# _dragging flag for ALL fingers, so releasing the joystick also
+		# killed camera rotation and vice versa.
+		var w := get_viewport().get_visible_rect().size.x
+		if event.pressed:
+			if _cam_touch == -1 and event.position.x > w * 0.4:
+				_cam_touch = event.index
+				_last_touch = event.position
+		else:
+			if event.index == _cam_touch:
+				_cam_touch = -1
+	elif event is InputEventScreenDrag:
+		if event.index == _cam_touch:
 			var sens3 := 0.006 * _sensitivity()
 			yaw -= event.relative.x * sens3
 			pitch = clampf(pitch - event.relative.y * sens3, min_pitch, max_pitch)
-		_last_touch = event.position
+			_last_touch = event.position
 
 
 func _process(delta: float) -> void:

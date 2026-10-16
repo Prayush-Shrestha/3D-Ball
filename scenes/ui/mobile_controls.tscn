@@ -32,9 +32,9 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
-offset_top = -240.0
+offset_top = -260.0
 offset_right = 240.0
-offset_bottom = -40.0
+offset_bottom = -60.0
 script = ExtResource("1_joy")
 
 [node name="Base" type="Panel" parent="Joystick"]
@@ -47,6 +47,7 @@ offset_left = -90.0
 offset_top = -90.0
 offset_right = 90.0
 offset_bottom = 90.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("JoyBase")
 
 [node name="Knob" type="Panel" parent="Joystick/Base"]
@@ -59,6 +60,7 @@ offset_left = -35.0
 offset_top = -35.0
 offset_right = 35.0
 offset_bottom = 35.0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("JoyKnob")
 
 [node name="JumpButton" type="Button" parent="."]
@@ -68,8 +70,8 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -220.0
-offset_top = -220.0
+offset_top = -240.0
 offset_right = -60.0
-offset_bottom = -60.0
+offset_bottom = -80.0
 text = "JUMP"
 ]

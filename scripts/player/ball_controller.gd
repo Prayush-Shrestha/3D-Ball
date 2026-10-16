@@ -17,7 +17,9 @@ signal landed
 @export var max_fall_speed := 30.0
 @export var ball_radius := 0.5
 
-var input_vector := Vector2.ZERO   # set by keyboard OR virtual joystick
+var input_vector := Vector2.ZERO   # final merged input (keyboard/stick/test)
+var joy_input := Vector2.ZERO     # written by VirtualJoystick on phones
+var _joy_active := false          # true while stick holds a direction
 var jump_held := false
 var external_jump_request := false # set by touch jump button
 var frozen := false                # true while paused / level complete
@@ -42,6 +44,12 @@ func _ready() -> void:
 	floor_block_on_wall = true
 	_audio = get_node_or_null("/root/AudioManager")
 	landed.connect(_on_landed)
+	# Low-end phones: fewer CPU particles = less lag/heat. Desktop keeps full FX.
+	if OS.has_feature("mobile") or OS.has_feature("android") or OS.get_name() == "Android":
+		if trail != null:
+			trail.amount = mini(trail.amount, 12)
+		if dust != null:
+			dust.amount = mini(dust.amount, 8)
 
 
 func _physics_process(delta: float) -> void:
@@ -119,11 +127,22 @@ func _pop_mesh(squash: Vector3) -> void:
 
 
 func _read_keyboard() -> void:
-	# Keyboard merges with joystick: joystick writes input_vector every frame,
-	# keyboard adds on top so both can coexist.
+	# Merge sources with priority: keyboard > joystick > external (tests).
+	# Old code let a stuck stick fight the keyboard; new code arbitrates so
+	# phones (stick) and PC (keys) coexist and a released stick always stops.
 	var kb := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	if kb.length() > 0.05:
 		input_vector = kb
+		# Remember stick state so releasing keys falls back to stick, not zero.
+		_joy_active = joy_input.length() > 0.05
+	elif joy_input.length() > 0.05:
+		input_vector = joy_input
+		_joy_active = true
+	elif _joy_active:
+		# Stick was driving and is now released: stop for sure.
+		input_vector = Vector2.ZERO
+		_joy_active = false
+	# else: leave input_vector untouched (set by tests / joystick legacy path).
 
 
 func _wish_direction() -> Vector3:
@@ -167,6 +186,11 @@ func respawn_at(pos: Vector3) -> void:
 	_coyote = 0.0
 	_buffer = 0.0
 	was_on_floor = false
+	# Don't let a held stick auto-run after respawn; wait for fresh input.
+	joy_input = Vector2.ZERO
+	_joy_active = false
+	input_vector = Vector2.ZERO
+	external_jump_request = false
 	if is_instance_valid(cam_pivot) and cam_pivot.has_method("snap_to_target"):
 		cam_pivot.snap_to_target()
 
@@ -175,3 +199,7 @@ func set_frozen(value: bool) -> void:
 	frozen = value
 	if frozen:
 		velocity = Vector3.ZERO
+		joy_input = Vector2.ZERO
+		_joy_active = false
+		input_vector = Vector2.ZERO
+		external_jump_request = false
