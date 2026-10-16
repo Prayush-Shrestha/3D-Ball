@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/rotating_obstacle.gd" id="1_ro"]
+
+[sub_resource type="BoxShape3D" id="Shape_bar"]
+size = Vector3(7, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="Mesh_bar"]
+size = Vector3(7, 1.0, 1.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_bar"]
+albedo_color = Color(0.95, 0.3, 0.35, 1)
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="Mesh_hub"]
+top_radius = 0.6
+bottom_radius = 0.8
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_hub"]
+albedo_color = Color(0.2, 0.25, 0.35, 1)
+metallic = 0.6
+roughness = 0.35
+
+[node name="RotatingObstacle" type="AnimatableBody3D"]
+script = ExtResource("1_ro")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("Shape_bar")
+
+[node name="Bar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("Mesh_bar")
+surface_material_override/0 = SubResource("Mat_bar")
+
+[node name="Hub" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("Mesh_hub")
+surface_material_override/0 = SubResource("Mat_hub")

@@ -1,0 +1,79 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_menu.gd" id="1_set"]
+
+[node name="SettingsMenu" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -260.0
+offset_right = 260.0
+offset_bottom = 260.0
+script = ExtResource("1_set")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="VBox"]
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="MasterRow" type="HBoxContainer" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/MasterRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Master"
+
+[node name="MasterSlider" type="HSlider" parent="VBox/MasterRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+
+[node name="MusicRow" type="HBoxContainer" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/MusicRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="VBox/MusicRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 80.0
+
+[node name="SfxRow" type="HBoxContainer" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/SfxRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Sound FX"
+
+[node name="SfxSlider" type="HSlider" parent="VBox/SfxRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+
+[node name="SensRow" type="HBoxContainer" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/SensRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Camera"
+
+[node name="SensSlider" type="HSlider" parent="VBox/SensRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 300.0
+min_value = 20.0
+value = 100.0
+
+[node name="TouchRow" type="HBoxContainer" parent="VBox"]
+[node name="Label" type="Label" parent="VBox/TouchRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Touch UI"
+
+[node name="TouchOption" type="OptionButton" parent="VBox/TouchRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="VBox"]
+text = "Close"

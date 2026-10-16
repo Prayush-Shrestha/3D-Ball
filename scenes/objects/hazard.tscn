@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/hazard.gd" id="1_hz"]
+
+[sub_resource type="BoxShape3D" id="Shape_hz"]
+size = Vector3(4, 1.0, 4)
+
+[sub_resource type="BoxMesh" id="Mesh_hz"]
+size = Vector3(4, 1.0, 4)
+
+[sub_resource type="StandardMaterial3D" id="Mat_hz"]
+albedo_color = Color(1, 0.25, 0.15, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.1, 1)
+emission_energy_multiplier = 1.0
+
+[node name="Hazard" type="Area3D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_hz")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_hz")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_hz")
+surface_material_override/0 = SubResource("Mat_hz")

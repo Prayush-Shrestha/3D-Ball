@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/ball_controller.gd" id="1_ball"]
+[ext_resource type="Script" path="res://scripts/player/follow_camera.gd" id="2_cam"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ball"]
+radius = 0.5
+height = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_ball"]
+radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 16
+
+[sub_resource type="StandardMaterial3D" id="Mat_ball"]
+albedo_color = Color(0.95, 0.25, 0.35, 1)
+metallic = 0.65
+roughness = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_highlight"]
+radius = 0.18
+height = 0.36
+
+[sub_resource type="StandardMaterial3D" id="Mat_stripe"]
+albedo_color = Color(1, 1, 1, 1)
+metallic = 0.3
+roughness = 0.4
+
+[node name="BallPlayer" type="CharacterBody3D"]
+script = ExtResource("1_ball")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ball")
+
+[node name="BallMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ball")
+surface_material_override/0 = SubResource("Mat_ball")
+
+[node name="Stripe" type="MeshInstance3D" parent="BallMesh"]
+transform = Transform3D(1, 0, 0, 0, 0.35, 0, 0, 0, 1, 0, 0.28, 0)
+mesh = SubResource("SphereMesh_highlight")
+surface_material_override/0 = SubResource("Mat_stripe")
+
+[node name="CamPivot" type="Node3D" parent="."]
+script = ExtResource("2_cam")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CamPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.92, 0.39, 0, -0.39, 0.92, 0, 1.4, 0)
+spring_length = 9.0
+margin = 0.3
+
+[node name="Camera3D" type="Camera3D" parent="CamPivot/SpringArm3D"]
+current = true
+fov = 60.0

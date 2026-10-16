@@ -1,0 +1,12 @@
+# Godot generated files — do not commit.
+.godot/
+build/
+
+# Godot import artifacts kept locally.
+/*.translation
+
+# OS / editor noise.
+Thumbs.db
+Desktop.ini
+*.tmp
+*.log

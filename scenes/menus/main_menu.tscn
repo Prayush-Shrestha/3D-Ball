@@ -1,0 +1,192 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Script" path="res://scripts/ui/settings_menu.gd" id="2_set"]
+
+[node name="MainMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.5, 0.72, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Center/VBox"]
+text = "ROLLING REALMS"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Center/VBox"]
+text = "A 3D rolling ball adventure"
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(260, 48)
+text = "▶  Play"
+
+[node name="LevelsButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(260, 48)
+text = "Levels"
+
+[node name="SettingsButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(260, 48)
+text = "Settings"
+
+[node name="HelpButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(260, 48)
+text = "How to Play"
+
+[node name="QuitButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(260, 48)
+text = "Quit"
+
+[node name="GemsLabel" type="Label" parent="Center/VBox"]
+text = "💎 Total gems: 0"
+horizontal_alignment = 1
+
+[node name="LevelPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -160.0
+offset_right = 360.0
+offset_bottom = 160.0
+
+[node name="VBox" type="VBoxContainer" parent="LevelPanel"]
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="LevelPanel/VBox"]
+text = "Select Level"
+horizontal_alignment = 1
+
+[node name="Levels" type="HBoxContainer" parent="LevelPanel/VBox"]
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="LevelPanel/VBox"]
+text = "Close"
+
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -260.0
+offset_right = 260.0
+offset_bottom = 260.0
+script = ExtResource("2_set")
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="SettingsPanel/VBox"]
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="MasterRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+[node name="Label" type="Label" parent="SettingsPanel/VBox/MasterRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Master"
+
+[node name="MasterSlider" type="HSlider" parent="SettingsPanel/VBox/MasterRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+
+[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+[node name="Label" type="Label" parent="SettingsPanel/VBox/MusicRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsPanel/VBox/MusicRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 80.0
+
+[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+[node name="Label" type="Label" parent="SettingsPanel/VBox/SfxRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Sound FX"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsPanel/VBox/SfxRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+
+[node name="SensRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+[node name="Label" type="Label" parent="SettingsPanel/VBox/SensRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Camera"
+
+[node name="SensSlider" type="HSlider" parent="SettingsPanel/VBox/SensRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+max_value = 300.0
+min_value = 20.0
+value = 100.0
+
+[node name="TouchRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+[node name="Label" type="Label" parent="SettingsPanel/VBox/TouchRow"]
+custom_minimum_size = Vector2(120, 0)
+text = "Touch UI"
+
+[node name="TouchOption" type="OptionButton" parent="SettingsPanel/VBox/TouchRow"]
+custom_minimum_size = Vector2(220, 0)
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="SettingsPanel/VBox"]
+text = "Close"
+
+[node name="HelpPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -240.0
+offset_right = 300.0
+offset_bottom = 240.0
+
+[node name="VBox" type="VBoxContainer" parent="HelpPanel"]
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="HelpPanel/VBox"]
+text = "How to Play"
+horizontal_alignment = 1
+
+[node name="HelpText" type="Label" parent="HelpPanel/VBox"]
+text = "Roll the ball to the golden finish pad.
+Collect all gems. Checkpoints save you.
+
+PC: WASD / Arrows to move, Space to jump,
+R restarts at checkpoint, Esc pauses.
+Right-drag orbits the camera.
+
+Mobile: left joystick moves, JUMP button jumps."
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="HelpPanel/VBox"]
+text = "Close"
