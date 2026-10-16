@@ -1,6 +1,10 @@
 ; Engine configuration file.
-; Rolling Realms - 3D Rolling Ball Adventure
-; Godot 4.7 stable, Compatibility renderer for PC / Android / Web.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -10,8 +14,8 @@ config/name="Rolling Realms"
 config/description="A 3D rolling ball adventure through floating sky islands."
 run/main_scene="res://scenes/menus/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
 boot_splash/bg_color=Color(0.1, 0.55, 0.75, 1)
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -23,7 +27,6 @@ GameManager="*res://scripts/managers/game_manager.gd"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4
@@ -31,20 +34,17 @@ window/handheld/orientation=4
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=true
 
 [physics]
 
 3d/default_gravity=20.0
-common/physics_ticks_per_second=60
 
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-renderer/rendering_method.web="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.35, 0.65, 0.95, 1)
-anti_aliasing/quality/msaa_3d=2
 lights_and_shadows/directional_shadow/size=2048
 lights_and_shadows/directional_shadow/size.mobile=1024
+anti_aliasing/quality/msaa_3d=2
+environment/defaults/default_clear_color=Color(0.35, 0.65, 0.95, 1)

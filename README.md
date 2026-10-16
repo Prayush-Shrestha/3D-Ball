@@ -33,14 +33,12 @@ platforms, grab golden gems, hit checkpoints, and reach the finish pad in 3 leve
   respawn/victory, click sounds on every button, live 3D diorama behind the menu.
 - Windows `.exe` and Android debug `.apk` built and tested from this project.
 
-## Screenshots
+## Screenshots (captured from the running game)
 
-> Placeholders — capture from the running game and drop files here.
->
-> - `docs/shot_menu.png` — main menu
-> - `docs/shot_level1.png` — Sky Meadow gameplay
-> - `docs/shot_level2.png` — Crystal Bridges gameplay
-> - `docs/shot_level3.png` — Skyfall Challenge gameplay
+![Main menu with live 3D backdrop](docs/shots/shot_menu.png)
+![Sky Meadow start — ball, gold-rimmed platforms, gems ahead](docs/shots/shot_spawn.png)
+![Rolling the bridge in Sky Meadow](docs/shots/shot_drive.png)
+![Golden finish pad with light beam](docs/shots/shot_finish.png)
 
 ## Requirements
 
@@ -83,8 +81,9 @@ platforms, grab golden gems, hit checkpoints, and reach the finish pad in 3 leve
 
 ```powershell
 $godot = "<path-to>\Godot_v4.7.2-stable_win64_console.exe"
-& $godot --headless --script res://tests/validate_scenes.gd  # 18 scenes + autoloads
+& $godot --headless --script res://tests/validate_scenes.gd  # 19 scenes + autoloads
 & $godot --headless --script res://tests/runtime_test.gd     # physics gameplay test
+& $godot --headless --script res://tests/slope_check.gd      # ramp direction test
 ```
 
 `runtime_test.gd` plays Level 1 with synthetic input through the real physics

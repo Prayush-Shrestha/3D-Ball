@@ -3,15 +3,13 @@ extends Node3D
 ## Mouse moves orbit yaw/pitch on PC. Touch drag on the right half of the
 ## screen orbits without fighting the left-side movement joystick.
 
-@export var distance := 9.0
-@export var height := 4.2
-@export var look_offset := Vector3(0, 1.2, 0)
-@export var smooth_speed := 10.0
+@export var distance := 8.5
+@export var lift := 1.6
 @export var min_pitch := -0.9
 @export var max_pitch := 0.55
 
 var yaw := 0.0
-var pitch := -0.32
+var pitch := -0.38
 var _dragging := false
 var _last_touch := Vector2.ZERO
 
@@ -59,15 +57,14 @@ func _sensitivity() -> float:
 func _apply_shape() -> void:
 	if arm != null:
 		arm.spring_length = distance
+		arm.position = Vector3(0, lift, 0)
 		arm.margin = 0.3
 
 
 func _update_transform(_delta: float) -> void:
+	# Only rotate the pivot: the SpringArm positions the camera by itself.
 	rotation.y = yaw
 	rotation.x = pitch
-	if arm != null and arm.get_child_count() > 0:
-		var cam: Camera3D = arm.get_child(0)
-		cam.position = Vector3(0, height * 0.15, 0)
 
 
 func snap_to_target() -> void:

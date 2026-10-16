@@ -99,5 +99,6 @@ surface_material_override/0 = SubResource("Mat_ball")
 
 [node name="Camera3D" type="Camera3D" parent="CamRig"]
 current = true
-transform = Transform3D(1, 0, 0, 0, 0.93, 0.37, 0, -0.37, 0.93, 0, 4.5, 11)
+position = Vector3(0, 7, 15)
+rotation = Vector3(-0.45, 0, 0)
 fov = 55.0

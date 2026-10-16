@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/ball_controller.gd" id="1_ball"]
 [ext_resource type="Script" path="res://scripts/player/follow_camera.gd" id="2_cam"]
@@ -27,6 +27,18 @@ albedo_color = Color(1, 1, 1, 1)
 metallic = 0.3
 roughness = 0.4
 
+[sub_resource type="TorusMesh" id="TorusMesh_equator"]
+inner_radius = 0.4
+outer_radius = 0.52
+
+[sub_resource type="StandardMaterial3D" id="Mat_equator"]
+albedo_color = Color(1, 0.78, 0.2, 1)
+metallic = 0.5
+roughness = 0.25
+emission_enabled = true
+emission = Color(1, 0.7, 0.15, 1)
+emission_energy_multiplier = 0.5
+
 [node name="BallPlayer" type="CharacterBody3D"]
 script = ExtResource("1_ball")
 
@@ -42,12 +54,16 @@ transform = Transform3D(1, 0, 0, 0, 0.35, 0, 0, 0, 1, 0, 0.28, 0)
 mesh = SubResource("SphereMesh_highlight")
 surface_material_override/0 = SubResource("Mat_stripe")
 
+[node name="Equator" type="MeshInstance3D" parent="BallMesh"]
+mesh = SubResource("TorusMesh_equator")
+surface_material_override/0 = SubResource("Mat_equator")
+
 [node name="CamPivot" type="Node3D" parent="."]
 script = ExtResource("2_cam")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CamPivot"]
-transform = Transform3D(1, 0, 0, 0, 0.92, 0.39, 0, -0.39, 0.92, 0, 1.4, 0)
-spring_length = 9.0
+position = Vector3(0, 1.6, 0)
+spring_length = 8.5
 margin = 0.3
 
 [node name="Camera3D" type="Camera3D" parent="CamPivot/SpringArm3D"]
